@@ -1,0 +1,41 @@
+body {
+    background-color: grey;
+}
+
+.main-body {
+    display: flex;
+    gap: 120px;
+    align-items: center;
+}
+
+#grid {
+    display: grid;
+    width: 700px;
+    height: 700px;
+    border: 1px solid;
+    background-Color: rgb(237, 237, 237);
+}
+
+.box {
+    user-select: none;
+}
+
+.color-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.color-indicator {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 24px;
+    vertical-align: middle;
+}
+
+.color-indicator:hover {
+    transform: scale(2);
+}
