@@ -1,26 +1,46 @@
-const DEFAULT_SIZE = 36;
-const DEFAULT_MODE = "manual";
 const MANUAL = "manual";
 const RANDOM = "random";
-const DEFAULT_COLOR = "fff";
+const DEFAULT_SIZE = 36;
+const DEFAULT_COLOR = "#fff";
+const DEFAULT_MODE = MANUAL;
 
 
 let currentMode = DEFAULT_MODE;
 let currentColor = DEFAULT_COLOR;
 let currentSize = DEFAULT_SIZE;
-let active = false;
+let drawing = false;
+let isErasing = false;
 const clearButton = document.querySelector('#clear');
 const gridSize = document.querySelector('#grid-size');
 const sliderSize = document.querySelector('#slider-size');
 const grid = document.querySelector('#grid');
 const mode = document.querySelector('#mode');
+const makeDefault = document.querySelector('#default');
+const erase = document.querySelector('#erase');
+
+/*
+Handles color toggling
+*/
+let colorIndicator = document.querySelector(".color-indicator");
+const colorPicker = new iro.ColorPicker("#color-picker", {width: 180, color: DEFAULT_COLOR});
+colorPicker.on('color:change', function(color) {
+    colorIndicator.classList.add('active');
+    var colorHex = color.hexString;
+    colorIndicator.style.backgroundColor = colorHex;
+    currentColor = colorHex;
+})
+colorPicker.on('input:end', function(color) {
+    colorIndicator.classList.remove('active');
+})
 
 clearButton.addEventListener('click', reloadGrid);
 sliderSize.onmousemove = (e) => updateSizeText(e.target.value);
 sliderSize.onchange = (e) => updateGrid(e.target.value);
 mode.addEventListener('click', toggleGrid);
-document.body.onmousedown = () => {active = true;}
-document.body.onmouseup = () => {active = false};
+makeDefault.addEventListener('click', revertDefault);
+erase.addEventListener('click', erasing);
+document.body.onmousedown = () => {drawing = true;}
+document.body.onmouseup = () => {drawing = false};
 
 function clearGrid() {
     grid.innerHTML = '';
@@ -29,6 +49,20 @@ function clearGrid() {
 function reloadGrid() {
     clearGrid();
     createGrid(currentSize);
+}
+
+function revertDefault() {
+    currentMode = DEFAULT_MODE;
+    currentColor = DEFAULT_COLOR;
+    currentSize = DEFAULT_SIZE;
+    updateSizeText(currentSize);
+    sliderSize.value = 36;
+    colorPicker.reset();
+    reloadGrid();
+}
+
+function erasing() {
+    isErasing = !isErasing;
 }
 
 function toggleGrid() {
@@ -64,8 +98,11 @@ function createGrid(size) {
 }
 
 function applyColor(e) {
-    if (active || e.type === "mousedown") {
-        if (currentMode === RANDOM) {
+    if (drawing || e.type === "mousedown") {
+        if (isErasing) {
+            e.target.style.backgroundColor = 'rgb(237, 237, 237)';
+        }
+        else if (currentMode === RANDOM) {
             var first = Math.floor(Math.random() * 256);
             var second = Math.floor(Math.random() * 256);
             var third = Math.floor(Math.random() * 256);
@@ -78,17 +115,5 @@ function applyColor(e) {
 
 
 window.onload = () => {
-  createGrid(DEFAULT_SIZE)
+    createGrid(DEFAULT_SIZE)
 }
-
-
-/*
-Handles color toggling
-*/
-let colorIndicator = document.querySelector(".color-indicator");
-const colorPicker = new iro.ColorPicker("#color-picker", {width: 180, color: DEFAULT_COLOR});
-colorPicker.on('color:change', function(color) {
-    var colorHex = color.hexString;
-    colorIndicator.style.backgroundColor = colorHex;
-    currentColor = colorHex;
-})
