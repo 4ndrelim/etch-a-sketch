@@ -1,6 +1,6 @@
 const MANUAL = "manual";
 const RANDOM = "random";
-const DEFAULT_SIZE = 36;
+const DEFAULT_SIZE = 16;
 const DEFAULT_COLOR = "#fff";
 const DEFAULT_MODE = MANUAL;
 
@@ -10,13 +10,15 @@ let currentColor = DEFAULT_COLOR;
 let currentSize = DEFAULT_SIZE;
 let drawing = false;
 let isErasing = false;
-const clearButton = document.querySelector('#clear');
+let isDisplayLines = false;
+const mode = document.querySelector('#mode');
+const erase = document.querySelector('#erase');
 const gridSize = document.querySelector('#grid-size');
 const sliderSize = document.querySelector('#slider-size');
-const grid = document.querySelector('#grid');
-const mode = document.querySelector('#mode');
+const showLines = document.querySelector('#grid-lines');
+const clearButton = document.querySelector('#clear');
 const makeDefault = document.querySelector('#default');
-const erase = document.querySelector('#erase');
+const grid = document.querySelector('#grid');
 
 /*
 Handles color toggling
@@ -33,34 +35,70 @@ colorPicker.on('input:end', function(color) {
     colorIndicator.classList.remove('active');
 })
 
+/*
+Event listeners
+*/
 clearButton.addEventListener('click', reloadGrid);
 sliderSize.onmousemove = (e) => updateSizeText(e.target.value);
 sliderSize.onchange = (e) => updateGrid(e.target.value);
 mode.addEventListener('click', toggleGrid);
 makeDefault.addEventListener('click', revertDefault);
 erase.addEventListener('click', erasing);
+showLines.addEventListener('click', toggleDisplay);
 document.body.onmousedown = () => {drawing = true;}
 document.body.onmouseup = () => {drawing = false};
 
-function clearGrid() {
+
+/*
+Grid settings
+*/
+function clearGrid() { // helper for reloadGrid
     grid.innerHTML = '';
 }
 
 function reloadGrid() {
     clearGrid();
     createGrid(currentSize);
+    currentDisplay();
+}
+
+/*
+this helper function is called whenever clear grid/grid size updated but wanting grid lines to remain
+*/
+function currentDisplay() { 
+    var divs = document.querySelectorAll('#grid div');
+    if (isDisplayLines) {
+        divs.forEach(e => e.style.border = '0.1px solid');
+    } else {
+        divs.forEach(e => e.style.border = '0px solid');
+    }
+}
+
+function toggleDisplay() {
+    var divs = document.querySelectorAll('#grid div');
+    if (isDisplayLines) {
+        divs.forEach(e => e.style.border = '0px solid');
+    } else {
+        divs.forEach(e => e.style.border = '0.1px solid');
+    }
+    isDisplayLines = !isDisplayLines;
 }
 
 function revertDefault() {
     currentMode = DEFAULT_MODE;
     currentColor = DEFAULT_COLOR;
     currentSize = DEFAULT_SIZE;
+    isErasing = false;
+    isDisplayLines = false;
     updateSizeText(currentSize);
-    sliderSize.value = 36;
+    sliderSize.value = DEFAULT_SIZE;
     colorPicker.reset();
     reloadGrid();
 }
 
+/*
+Toggles between available modes - random, manual & eraser
+*/
 function erasing() {
     isErasing = !isErasing;
 }
@@ -69,13 +107,16 @@ function toggleGrid() {
     reloadGrid();
     if (currentMode === MANUAL) {
         currentMode = RANDOM;
-        mode.textContent = `Go ${MANUAL}`
+        mode.textContent = `Current: ${RANDOM}`
     } else {
         currentMode = MANUAL;
-        mode.textContent = `Go ${RANDOM}`
+        mode.textContent = `Current: ${MANUAL}`
     }
 }
 
+/*
+Update grid display size and internal size
+*/
 function updateSizeText(value) {
     gridSize.textContent = `${value} x ${value}`;
 }
@@ -85,6 +126,9 @@ function updateGrid(value) {
     reloadGrid();
 }
 
+/*
+initializes grid
+*/
 function createGrid(size) {
     grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`
     grid.style.gridTemplateRows = `repeat(${size}, 1fr)`
@@ -97,6 +141,9 @@ function createGrid(size) {
     }
 }
 
+/*
+apply color to a box in grid
+*/
 function applyColor(e) {
     if (drawing || e.type === "mousedown") {
         if (isErasing) {
