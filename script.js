@@ -1,7 +1,7 @@
 const MANUAL = "manual";
 const RANDOM = "random";
 const DEFAULT_SIZE = 16;
-const DEFAULT_COLOR = "#fff";
+const DEFAULT_COLOR = "#eeeeee";
 const DEFAULT_MODE = MANUAL;
 
 
@@ -104,7 +104,6 @@ function erasing() {
 }
 
 function toggleGrid() {
-    reloadGrid();
     if (currentMode === MANUAL) {
         currentMode = RANDOM;
         mode.textContent = `Current: ${RANDOM}`
