@@ -3,6 +3,7 @@ const RANDOM = "random";
 const DEFAULT_SIZE = 16;
 const DEFAULT_COLOR = "#eeeeee";
 const DEFAULT_MODE = MANUAL;
+const ERASE_COLOR = "#ffffff";
 
 
 let currentMode = DEFAULT_MODE;
@@ -63,7 +64,7 @@ function reloadGrid() {
 }
 
 /*
-this helper function is called whenever clear grid/grid size updated but wanting grid lines to remain
+this helper function is called whenever clear grid/grid size updated but wanting grid lines to still display
 */
 function currentDisplay() { 
     var divs = document.querySelectorAll('#grid div');
@@ -77,8 +78,10 @@ function currentDisplay() {
 function toggleDisplay() {
     var divs = document.querySelectorAll('#grid div');
     if (isDisplayLines) {
+        showLines.classList.remove('active');
         divs.forEach(e => e.style.border = '0px solid');
     } else {
+        showLines.classList.add('active');
         divs.forEach(e => e.style.border = '0.1px solid');
     }
     isDisplayLines = !isDisplayLines;
@@ -86,12 +89,21 @@ function toggleDisplay() {
 
 function revertDefault() {
     currentMode = DEFAULT_MODE;
+    mode.textContent = `Current: ${MANUAL}`
+
     currentColor = DEFAULT_COLOR;
     currentSize = DEFAULT_SIZE;
+    
+    // personal note: If you try to remove a class that the element isn't a member of, then classList.remove will do nothing.
     isErasing = false;
+    erase.classList.remove('active');
+
     isDisplayLines = false;
+    showLines.classList.remove('active');
+
     updateSizeText(currentSize);
     sliderSize.value = DEFAULT_SIZE;
+
     colorPicker.reset();
     reloadGrid();
 }
@@ -100,6 +112,11 @@ function revertDefault() {
 Toggles between available modes - random, manual & eraser
 */
 function erasing() {
+    if (isErasing) {
+        erase.classList.remove('active');
+    } else {
+        erase.classList.add('active');
+    }
     isErasing = !isErasing;
 }
 
@@ -146,7 +163,7 @@ apply color to a box in grid
 function applyColor(e) {
     if (drawing || e.type === "mousedown") {
         if (isErasing) {
-            e.target.style.backgroundColor = 'rgb(237, 237, 237)';
+            e.target.style.backgroundColor = ERASE_COLOR;
         }
         else if (currentMode === RANDOM) {
             var first = Math.floor(Math.random() * 256);
