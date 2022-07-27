@@ -166,9 +166,12 @@ function applyColor(e) {
             e.target.style.backgroundColor = ERASE_COLOR;
         }
         else if (currentMode === RANDOM) {
-            var first = Math.floor(Math.random() * 256);
-            var second = Math.floor(Math.random() * 256);
-            var third = Math.floor(Math.random() * 256);
+            var base1 = 56;
+            var base2 = 36;
+            var base3 = 86;
+            var first = Math.floor(Math.random() * (256 - base1)) + base1;
+            var second = Math.floor(Math.random() * (256 - base2)) + base2;
+            var third = Math.floor(Math.random() * (256 - base3)) + base3;
             e.target.style.backgroundColor = `rgb(${first}, ${second}, ${third})`;
         } else if (currentMode === MANUAL) {
             e.target.style.backgroundColor = currentColor;
