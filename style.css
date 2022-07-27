@@ -1,5 +1,6 @@
 :root {
     --font-color: rgba(66, 66, 66, 0.849);
+    --freeze-color: rgba(10, 132, 145, 0.819);
 }
 body {
     background-color: rgb(233, 233, 233);
@@ -30,6 +31,18 @@ grid-settings
     gap: 24px;
     align-items: center;
     width: 216px;
+}
+
+.settings .more-settings {
+    display: flex;
+    gap: 36px;
+}
+
+.more-settings .grp-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
 }
 
 .settings button {
@@ -70,6 +83,11 @@ grid
     background-Color: rgb(255, 255, 255);
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+}
+
+.freeze-active {
+    border: 0.1px solid; 
+    border-color: var(--freeze-color);
 }
 
 .box {
