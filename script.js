@@ -12,10 +12,12 @@ let currentSize = DEFAULT_SIZE;
 let drawing = false;
 let isErasing = false;
 let togglingFreeze = false;
+let hideFreezeDisplay = false;
 let isDisplayLines = false;
 const mode = document.querySelector('#mode');
 const erase = document.querySelector('#erase');
 const toggleFreeze = document.querySelector('#freeze');
+const hideFreeze = document.querySelector('#hide-freeze');
 const gridSize = document.querySelector('#grid-size');
 const sliderSize = document.querySelector('#slider-size');
 const showLines = document.querySelector('#grid-lines');
@@ -38,6 +40,7 @@ colorPicker.on('input:end', function(color) {
     colorIndicator.classList.remove('active');
 })
 
+
 /*
 Event listeners
 */
@@ -48,6 +51,7 @@ mode.addEventListener('click', toggleGrid);
 makeDefault.addEventListener('click', revertDefault);
 erase.addEventListener('click', erasing);
 toggleFreeze.addEventListener('click', freezing);
+hideFreeze.addEventListener('click', toggleFreezeDisplay);
 showLines.addEventListener('click', toggleDisplay);
 document.body.onmousedown = () => {drawing = true;}
 document.body.onmouseup = () => {drawing = false};
@@ -69,7 +73,6 @@ function reloadGrid() {
     createGrid(currentSize);
     currentDisplay();
 }
-
 
 // this helper function is called whenever clear grid/grid size updated but wanting grid lines to still display
 function currentDisplay() { 
@@ -110,12 +113,16 @@ function revertDefault() {
     togglingFreeze = false;
     toggleFreeze.classList.remove('active');
 
+    hideFreezeDisplay = false;
+    hideFreeze.classList.remove('active');
+
     updateSizeText(currentSize);
     sliderSize.value = DEFAULT_SIZE;
 
     colorPicker.reset();
     reloadGrid();
 }
+
 
 /*
 Toggles between available modes - random & manual, eraser, freeze
@@ -148,6 +155,23 @@ function freezing() {
     togglingFreeze = !togglingFreeze;
 }
 
+
+/*
+Handles freeze display
+*/
+function toggleFreezeDisplay() {
+    var divs = document.querySelectorAll('#grid div');
+    if (hideFreezeDisplay) { // so want to un-hide freeze
+        hideFreeze.classList.remove('active');
+        divs.forEach(e => e.classList.contains('freeze-active') ? e.classList.remove('freeze-hide') : null);
+    } else {
+        hideFreeze.classList.add('active');
+        divs.forEach(e => e.classList.contains('freeze-active') ? e.classList.add('freeze-hide') : null);
+    }
+    hideFreezeDisplay = !hideFreezeDisplay;
+}
+
+
 /*
 Update grid display size and internal size
 */
@@ -159,6 +183,7 @@ function updateGrid(value) {
     currentSize = value;
     reloadGrid();
 }
+
 
 /*
 initializes grid
@@ -174,6 +199,8 @@ function createGrid(size) {
         grid.appendChild(box);
     }
 }
+
+
 /*
 determines whether to freeze or color a pixel/box depending on state of toggleFreeze
 */
@@ -187,6 +214,7 @@ function freezeOrColor(e) {
     }
 }
 
+
 /*
 toggles freeze state of an element; 
 applying on an unfrozen element would freeze it
@@ -199,6 +227,7 @@ function toggleFreezeState(e) {
         e.target.classList.add('freeze-active');
     }
 }
+
 
 /*
 apply color to a box in grid
@@ -222,7 +251,8 @@ function applyColor(e) {
     }
 }
 
+
 window.onload = () => {
     createGrid(DEFAULT_SIZE);
-    colorIndicator.style.backgroundColor = DEFAULT_COLOR;
+    colorIndicator.style.backgroundColor = DEFAULT_COLOR; // correct display for default drawing color
 }

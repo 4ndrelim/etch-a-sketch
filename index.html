@@ -12,15 +12,22 @@
         <h1 class="header">Etch A Sketch</h1>
         <div class="main-body">
             <div class="settings">
-                <button id="mode">Current: manual</button>
-                <button id="erase">Eraser</button>
+                <div class="more-settings">
+                    <div class="grp-settings">
+                        <button id="mode">Current: manual</button>
+                    </div>
+                    <div class="grp-settings">
+                        <button id="grid-lines">Grid</button>
+                        <button id="erase">Eraser</button>
+                    </div>
+                </div>
                 <div class="toggle-grid">
                     <div id="grid-size">16 x 16</div>
                     <input id="slider-size" type="range" value="16" max="72" min="1">
                 </div>
                 <div class="more-settings">
                     <div class="grp-settings">
-                        <button id="grid-lines">Grid</button>
+                        <button id="hide-freeze">Hide Freeze</button>
                         <button id="freeze">Freeze</button>
                     </div>
                     <div class="grp-settings">

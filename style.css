@@ -41,6 +41,7 @@ grid-settings
 
 .more-settings .grp-settings {
     display: flex;
+    justify-content: center;
     gap: 36px;
 }
 
