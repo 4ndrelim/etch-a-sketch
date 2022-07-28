@@ -223,8 +223,12 @@ applying on a frozen element would unfreeze it
 function toggleFreezeState(e) {
     if (e.target.classList.contains('freeze-active')) {
         e.target.classList.remove('freeze-active');
+        e.target.classList.remove('freeze-hide');
     } else {
         e.target.classList.add('freeze-active');
+        if (hideFreezeDisplay) {
+            e.target.classList.add('freeze-hide');
+        }
     }
 }
 
