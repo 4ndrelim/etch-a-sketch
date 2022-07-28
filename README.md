@@ -10,9 +10,9 @@ Built a classic Etch-A-Sketch with the following functionalities:
 5. Clear grid & revert default functionality
 
 ## Product Display
-<img src = './assets/display2.jpg' alt='display sketch' width='400'>
+<img src = './assets/display2.jpg' alt='display sketch' width='500'>
 
-<img src = './assets/display1.jpg' alt='display sketch' width='400'>
+<img src = './assets/display1.jpg' alt='display sketch' width='500'>
 
 
 Click [here](https://4ndrelim.github.io/etch-a-sketch/) to view!
