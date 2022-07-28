@@ -56,19 +56,22 @@ document.body.onmouseup = () => {drawing = false};
 /*
 Grid settings
 */
-function clearGrid() { // helper for reloadGrid
+function cleanGrid() { // helper for reloadGrid
     grid.innerHTML = '';
 }
 
+// this function is called when Clear button is clicked
+// or when default button is clicked (helper function in revertDefault())
+// NOTE: Because an entire new grid is created, no need to worry about the toggling 
+//       of an element/div freeze state in the board!
 function reloadGrid() {
-    clearGrid();
+    cleanGrid();
     createGrid(currentSize);
     currentDisplay();
 }
 
-/*
-this helper function is called whenever clear grid/grid size updated but wanting grid lines to still display
-*/
+
+// this helper function is called whenever clear grid/grid size updated but wanting grid lines to still display
 function currentDisplay() { 
     var divs = document.querySelectorAll('#grid div');
     if (isDisplayLines) {
