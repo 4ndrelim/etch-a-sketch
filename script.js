@@ -104,6 +104,9 @@ function revertDefault() {
     isDisplayLines = false;
     showLines.classList.remove('active');
 
+    togglingFreeze = false;
+    toggleFreeze.classList.remove('active');
+
     updateSizeText(currentSize);
     sliderSize.value = DEFAULT_SIZE;
 
@@ -163,9 +166,34 @@ function createGrid(size) {
     for (let i = 0; i < size * size; i++) {
         var box = document.createElement('div');
         box.classList.add('box');
-        box.addEventListener('mouseover', applyColor);
-        box.addEventListener('mousedown', applyColor); // ensures first box clicked will have color applied
+        box.addEventListener('mouseover', freezeOrColor);
+        box.addEventListener('mousedown', freezeOrColor); // ensures first box clicked will have color applied
         grid.appendChild(box);
+    }
+}
+/*
+determines whether to freeze or color a pixel/box depending on state of toggleFreeze
+*/
+function freezeOrColor(e) {
+    if (drawing || e.type === "mousedown") {
+        if (togglingFreeze) {
+            toggleFreezeState(e);
+        } else {
+            applyColor(e);
+        }
+    }
+}
+
+/*
+toggles freeze state of an element; 
+applying on an unfrozen element would freeze it
+applying on a frozen element would unfreeze it
+*/
+function toggleFreezeState(e) {
+    if (e.target.classList.contains('freeze-active')) {
+        e.target.classList.remove('freeze-active');
+    } else {
+        e.target.classList.add('freeze-active');
     }
 }
 
@@ -173,7 +201,7 @@ function createGrid(size) {
 apply color to a box in grid
 */
 function applyColor(e) {
-    if (drawing || e.type === "mousedown") {
+    if (!e.target.classList.contains('freeze-active')) { // make sure element isn't frozen
         if (isErasing) {
             e.target.style.backgroundColor = ERASE_COLOR;
         }

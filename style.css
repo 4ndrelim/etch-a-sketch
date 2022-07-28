@@ -1,6 +1,6 @@
 :root {
     --font-color: rgba(66, 66, 66, 0.849);
-    --freeze-color: rgba(10, 132, 145, 0.819);
+    --freeze-color: rgba(0, 255, 255, 0.886);
 }
 body {
     background-color: rgb(233, 233, 233);
@@ -85,9 +85,12 @@ grid
     box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 
+.grid-lines-active {
+    border: 0.1px solid;
+}
+
 .freeze-active {
-    border: 0.1px solid; 
-    border-color: var(--freeze-color);
+    border: 2px dotted var(--freeze-color);
 }
 
 .box {
