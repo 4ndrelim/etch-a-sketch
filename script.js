@@ -223,5 +223,6 @@ function applyColor(e) {
 }
 
 window.onload = () => {
-    createGrid(DEFAULT_SIZE)
+    createGrid(DEFAULT_SIZE);
+    colorIndicator.style.backgroundColor = DEFAULT_COLOR;
 }
