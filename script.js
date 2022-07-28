@@ -11,9 +11,11 @@ let currentColor = DEFAULT_COLOR;
 let currentSize = DEFAULT_SIZE;
 let drawing = false;
 let isErasing = false;
+let togglingFreeze = false;
 let isDisplayLines = false;
 const mode = document.querySelector('#mode');
 const erase = document.querySelector('#erase');
+const toggleFreeze = document.querySelector('#freeze');
 const gridSize = document.querySelector('#grid-size');
 const sliderSize = document.querySelector('#slider-size');
 const showLines = document.querySelector('#grid-lines');
@@ -45,6 +47,7 @@ sliderSize.onchange = (e) => updateGrid(e.target.value);
 mode.addEventListener('click', toggleGrid);
 makeDefault.addEventListener('click', revertDefault);
 erase.addEventListener('click', erasing);
+toggleFreeze.addEventListener('click', freezing);
 showLines.addEventListener('click', toggleDisplay);
 document.body.onmousedown = () => {drawing = true;}
 document.body.onmouseup = () => {drawing = false};
@@ -69,9 +72,9 @@ this helper function is called whenever clear grid/grid size updated but wanting
 function currentDisplay() { 
     var divs = document.querySelectorAll('#grid div');
     if (isDisplayLines) {
-        divs.forEach(e => e.style.border = '0.1px solid');
+        divs.forEach(e => e.classList.add('grid-lines-active'));
     } else {
-        divs.forEach(e => e.style.border = '0px solid');
+        divs.forEach(e => e.classList.remove('grid-lines-active'));
     }
 }
 
@@ -79,10 +82,10 @@ function toggleDisplay() {
     var divs = document.querySelectorAll('#grid div');
     if (isDisplayLines) {
         showLines.classList.remove('active');
-        divs.forEach(e => e.style.border = '0px solid');
+        divs.forEach(e => e.classList.remove('grid-lines-active'));
     } else {
         showLines.classList.add('active');
-        divs.forEach(e => e.style.border = '0.1px solid');
+        divs.forEach(e => e.classList.add('grid-lines-active'));
     }
     isDisplayLines = !isDisplayLines;
 }
@@ -109,8 +112,18 @@ function revertDefault() {
 }
 
 /*
-Toggles between available modes - random, manual & eraser
+Toggles between available modes - random & manual, eraser, freeze
 */
+function toggleGrid() {
+    if (currentMode === MANUAL) {
+        currentMode = RANDOM;
+        mode.textContent = `Current: ${RANDOM}`
+    } else {
+        currentMode = MANUAL;
+        mode.textContent = `Current: ${MANUAL}`
+    }
+}
+
 function erasing() {
     if (isErasing) {
         erase.classList.remove('active');
@@ -120,14 +133,13 @@ function erasing() {
     isErasing = !isErasing;
 }
 
-function toggleGrid() {
-    if (currentMode === MANUAL) {
-        currentMode = RANDOM;
-        mode.textContent = `Current: ${RANDOM}`
+function freezing() {
+    if (togglingFreeze) {
+        toggleFreeze.classList.remove('active');
     } else {
-        currentMode = MANUAL;
-        mode.textContent = `Current: ${MANUAL}`
+        toggleFreeze.classList.add('active');
     }
+    togglingFreeze = !togglingFreeze;
 }
 
 /*
@@ -178,7 +190,6 @@ function applyColor(e) {
         }
     }
 }
-
 
 window.onload = () => {
     createGrid(DEFAULT_SIZE)
