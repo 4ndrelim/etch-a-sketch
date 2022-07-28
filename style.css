@@ -35,14 +35,13 @@ grid-settings
 
 .settings .more-settings {
     display: flex;
-    gap: 36px;
+    flex-direction: column;
+    gap: 24px;
 }
 
 .more-settings .grp-settings {
     display: flex;
-    flex-direction: column;
-    gap: 24px;
-    align-items: center;
+    gap: 36px;
 }
 
 .settings button {
@@ -90,7 +89,11 @@ grid
 }
 
 .freeze-active {
-    border: 2px dashed var(--freeze-color);
+    outline: ridge var(--freeze-color);
+}
+
+.freeze-hide {
+    outline: none;
 }
 
 .box {
